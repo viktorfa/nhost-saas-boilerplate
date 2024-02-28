@@ -1,0 +1,20 @@
+{
+  "name": "nhost",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build:es": "esbuild src/node-server.ts --bundle --platform=node --target=node18 --outdir=out",
+    "dev": "nodemon --watch src --ext ts --exec 'yarn build:es && yarn start'",
+    "generate-gql-types": "graphql-codegen --config graphql-codegen.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node out/node-server.js",
+    "stripe": "stripe listen --forward-to localhost:3010/v1/handleStripeWebhook",
+    "tunnel": "cloudflared tunnel --url http://localhost:3010",
+    "nhost": "NHOST_PROJECT_NAME=clothes nhost"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}
