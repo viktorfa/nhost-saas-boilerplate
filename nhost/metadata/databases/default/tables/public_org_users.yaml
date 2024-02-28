@@ -1,0 +1,3 @@
+table:
+  name: org_users
+  schema: public
