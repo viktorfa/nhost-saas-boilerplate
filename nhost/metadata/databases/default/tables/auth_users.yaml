@@ -91,7 +91,21 @@ object_relationships:
   - name: defaultRoleByRole
     using:
       foreign_key_constraint_on: default_role
+  - name: user_profile
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: user_profiles
+          schema: public
 array_relationships:
+  - name: org_users
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: org_users
+          schema: public
   - name: refreshTokens
     using:
       foreign_key_constraint_on:
@@ -120,3 +134,17 @@ array_relationships:
         table:
           name: user_providers
           schema: auth
+event_triggers:
+  - name: handleInsertUser
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      interval_sec: 30
+      num_retries: 1
+      timeout_sec: 60
+    webhook: '{{SLS_FUNCTIONS_URL}}/handleInsert'
+    headers:
+      - name: nhost-webhook-secret
+        value_from_env: NHOST_WEBHOOK_SECRET

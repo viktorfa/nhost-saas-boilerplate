@@ -1,5 +1,13 @@
 [global]
 
+[[global.environment]]
+name = 'SLS_FUNCTIONS_URL'
+value = '{{ secrets.SLS_FUNCTIONS_URL }}'
+
+[[global.environment]]
+name = 'FRONTEND_BASE_URL'
+value = '{{ secrets.FRONTEND_BASE_URL }}'
+
 [hasura]
 version = 'v2.33.4-ce'
 adminSecret = '{{ secrets.HASURA_GRAPHQL_ADMIN_SECRET }}'
@@ -32,7 +40,8 @@ version = 18
 version = '0.24.1'
 
 [auth.redirections]
-clientUrl = 'http://localhost:3000'
+clientUrl = '{{ secrets.FRONTEND_BASE_URL }}/app/dashboard'
+allowedUrls = ['{{ secrets.FRONTEND_BASE_URL }}/app/dashboard', '{{ secrets.FRONTEND_BASE_URL }}/app/auth/post-sign-up']
 
 [auth.signUp]
 enabled = true
@@ -40,8 +49,8 @@ disableNewUsers = false
 
 [auth.user]
 [auth.user.roles]
-default = 'user'
-allowed = ['user', 'me']
+default = 'user_with_inherit'
+allowed = ['user', 'me', 'user_with_inherit']
 
 [auth.user.locale]
 default = 'en'
@@ -61,7 +70,19 @@ rating = 'g'
 expiresIn = 900
 
 [auth.session.refreshToken]
-expiresIn = 43200
+expiresIn = 259200
+
+[[auth.session.accessToken.customClaims]]
+key = 'Org-Ids'
+value = 'org_users.org_id[]'
+
+[[auth.session.accessToken.customClaims]]
+key = 'Org-User-Id'
+value = 'user_profile.current_org_user'
+
+[[auth.session.accessToken.customClaims]]
+key = 'Org-Id'
+value = 'user_profile.org_user.org_id'
 
 [auth.method]
 [auth.method.anonymous]
@@ -72,7 +93,7 @@ enabled = false
 
 [auth.method.emailPassword]
 hibpEnabled = false
-emailVerificationRequired = true
+emailVerificationRequired = false
 passwordMinLength = 9
 
 [auth.method.smsPasswordless]

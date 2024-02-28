@@ -1,0 +1,77 @@
+org: "..."
+app: "..."
+service: "..."
+frameworkVersion: '3'
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-central-1
+  logRetentionInDays: 1
+  environment:
+    NHOST_ADMIN_SECRET: ${env:NHOST_ADMIN_SECRET}
+    NHOST_REGION: ${env:NHOST_REGION}
+    NHOST_SUBDOMAIN: ${env:NHOST_SUBDOMAIN}
+    NHOST_WEBHOOK_SECRET: ${env:NHOST_WEBHOOK_SECRET}
+    NHOST_JWT_SECRET: ${env:NHOST_JWT_SECRET}
+    DATABASE_URL: ${env:DATABASE_URL}
+  
+    WEBHOOK_SECRET: ${env:WEBHOOK_SECRET}
+    WEBHOOK_BASE_URL: ${env:WEBHOOK_BASE_URL}
+
+    STRIPE_SECRET_KEY: ${env:STRIPE_SECRET_KEY}
+    STRIPE_ENDPOINT_SECRET: ${env:STRIPE_ENDPOINT_SECRET}
+
+    SENDGRID_API_KEY: ${env:SENDGRID_API_KEY}
+
+    GA4_MEASUREMENT_ID: ${env:GA4_MEASUREMENT_ID}
+    GA4_API_SECRET: ${env:GA4_API_SECRET}
+    
+    JUNE_KEY: ${env:JUNE_KEY}
+
+    VIPPS_MERCHANT_SERIAL_NUMBER: ${env:VIPPS_MERCHANT_SERIAL_NUMBER}
+    VIPPS_OCM_SUBSCRIPTION_KEY: ${env:VIPPS_OCM_SUBSCRIPTION_KEY}
+    VIPPS_CLIENT_ID: ${env:VIPPS_CLIENT_ID}
+    VIPPS_CLIENT_SECRET: ${env:VIPPS_CLIENT_SECRET}
+    VIPPS_WEBHOOK_SECRET: ${env:VIPPS_WEBHOOK_SECRET}
+
+    STAGE: ${sls:stage}
+  memorySize: 512
+  versionFunctions: false
+
+
+functions:
+  #app:
+  #  timeout: 900
+  #  handler: src/handler.handler
+  #  events:
+  #    - http:
+  #        method: ANY
+  #        path: /
+  #    - http:
+  #        method: ANY
+  #        path: "{proxy+}"
+  appUrl:
+    timeout: 900
+    handler: src/handler.handler
+    url: true
+
+custom:
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap: true
+    exclude: ["aws-sdk"]
+    target: node18
+    define:
+      require.resolve: undefined
+    platform: node
+    concurrency: 10
+    watch:
+      pattern: ["src/**/*.ts"]
+
+plugins:
+  - serverless-offline
+  - serverless-esbuild
+  - serverless-cloudformation-sub-variables

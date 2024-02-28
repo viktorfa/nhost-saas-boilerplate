@@ -7,6 +7,7 @@
 - "!include auth_user_roles.yaml"
 - "!include auth_user_security_keys.yaml"
 - "!include auth_users.yaml"
+- "!include payment_vipps_sessions.yaml"
 - "!include public_org_subscriptions.yaml"
 - "!include public_org_users.yaml"
 - "!include public_orgs.yaml"

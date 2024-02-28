@@ -1,2 +1,9 @@
 .secrets
 .nhost
+node_modules/
+out/
+
+.env.local
+.env.dev
+.env.prod
+.env
